@@ -1,0 +1,78 @@
+#include <stdio.h>
+
+#define MAX 10
+
+int graph[MAX][MAX], visited[MAX], n;
+
+void createGraph() {
+    int i, j;
+    printf("Enter number of cities (vertices): ");
+    scanf("%d", &n);
+
+    printf("Enter adjacency matrix (1 for connected, 0 for not connected):\n");
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            printf("Is there a path from city %d to city %d? (1/0): ", i, j);
+            scanf("%d", &graph[i][j]);
+        }
+    }
+}
+
+void DFS(int v) {
+    int i;
+    visited[v] = 1;
+    printf("%d ", v);
+    for (i = 0; i < n; i++) {
+        if (graph[v][i] && !visited[i])
+            DFS(i);
+    }
+}
+
+void BFS(int start) {
+    int queue[MAX], front = 0, rear = 0;
+    int i, v;
+
+    for (i = 0; i < n; i++)
+        visited[i] = 0;
+
+    queue[rear++] = start;
+    visited[start] = 1;
+    printf("%d ", start);
+
+    while (front < rear) {
+        v = queue[front++];
+        for (i = 0; i < n; i++) {
+            if (graph[v][i] && !visited[i]) {
+                printf("%d ", i);
+                queue[rear++] = i;
+                visited[i] = 1;
+            }
+        }
+    }
+}
+
+int main() {
+    int start, i, choice;
+    createGraph();
+
+    printf("\nEnter starting city (vertex number): ");
+    scanf("%d", &start);
+
+    printf("\nChoose Traversal Method:\n1. DFS\n2. BFS\nEnter choice: ");
+    scanf("%d", &choice);
+
+    for (i = 0; i < n; i++)
+        visited[i] = 0;
+
+    printf("\nNodes reachable from city %d are:\n", start);
+
+    if (choice == 1)
+        DFS(start);
+    else if (choice == 2)
+        BFS(start);
+    else
+        printf("Invalid choice!");
+
+    printf("\n");
+    return 0;
+}
